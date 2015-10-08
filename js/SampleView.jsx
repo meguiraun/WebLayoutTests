@@ -1,11 +1,13 @@
 /** @jsx React.DOM */
 var SampleCentring = React.createClass({
 	getInitialState: function () {
-      return {
-          sampleName: 'Sample_42'
-      }
-    },
-
+    return {
+      sampleName: 'Sample_42',
+      currentZoom: 0,
+      zoomLevels:["Zoom 1","Zoom 2","Zoom 3","Zoom 4","Zoom 5","Zoom 6","Zoom 7","Zoom 8","Zoom 9", "Zoom 10"],
+      zoomText: "Zoom 1"
+    }
+  },
   componentWillMount: function(){
   },
   aMethod: function(){
@@ -34,6 +36,41 @@ var SampleCentring = React.createClass({
   },
   componentDidMount: function(){
   },
+  zoomIn: function(ev){
+    var newIndex = Math.max(0, Math.min(this.state.currentZoom+=1, 9))
+    var newZoom = this.state.zoomLevels[newIndex]
+    this.setState({currentZoom: newIndex})
+    this.setState({zoomText: newZoom})
+    $.ajax({
+          url: '/mxcube/api/v0.1/samplecentring/zoom/move',
+          data: JSON.stringify({'moveable': 'Zoom', 'position': newZoom}, null, '\t'),
+          contentType: 'application/json;charset=UTF-8',
+          type: 'PUT',
+          success: function(res) {
+              console.log(res);
+          },
+          error: function(error) {
+            console.log(error);
+          },
+      });
+  },
+  zoomOut: function(ev){
+    var newIndex = Math.max(0, Math.min(this.state.currentZoom-=1, 9))
+    this.setState({currentZoom: newIndex})
+    var newZoom = this.state.zoomLevels[newIndex]
+    $.ajax({
+      url: '/mxcube/api/v0.1/samplecentring/zoom/move',
+      data: JSON.stringify({'moveable': 'Zoom', 'position': newZoom}, null, '\t'),
+      contentType: 'application/json;charset=UTF-8',
+      type: 'PUT',
+      success: function(res) {
+          console.log(res);
+      },
+      error: function(error) {
+        console.log(error);
+      },
+    });
+    },
   //only will send data when 'enter' key is pressed, the spinbox up/down fire the onInput event, as well as anything type in the box, so for setting 314.5 -> four event are sent. TODO: add event handling for the spin box, so a different filter is needed.
   push: function(id,data){
     console.log("push requested")
@@ -74,9 +111,9 @@ var SampleCentring = React.createClass({
                             <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-calculator"></i></button>                              
                             <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-arrows-v"></i></button>                            
                             <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-camera"></i></button>                            
-                            <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-arrows"></i></button>                          
-                            <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-rotate-right"></i></button>
-                            <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-lightbulb-o"></i></button>
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-arrows"></i></button>
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.zoomIn}><i className="fa fa-2x fa-fw fa fa-search-plus"></i></button>
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.zoomOut}><i className="fa fa-2x fa-fw fa fa-search-minus"></i></button>
                             <div class="input-group">
                               <span class="input-group-addon" id="basic-addon1">Kappa   </span>
                               <input type="number"  id="Kappa" step="0.01" min='0' max='360'  class="form-control" placeholder="kappa" aria-describedby="basic-addon1" onKeyPress={this.isNumberKey} onkeyup={this.isNumberKey}> </input>
