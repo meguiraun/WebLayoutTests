@@ -6,7 +6,8 @@ var SampleCentring = React.createClass({
       currentZoom: 0,
       zoomLevels:["Zoom 1","Zoom 2","Zoom 3","Zoom 4","Zoom 5","Zoom 6","Zoom 7","Zoom 8","Zoom 9", "Zoom 10"],
       zoomText: "Zoom 1",
-      light:0
+      light:0,
+      pos:[]
     }
   },
   componentWillMount: function(){
@@ -15,9 +16,96 @@ var SampleCentring = React.createClass({
       console.log('aMethod Called')  
   },
   takeSnapshot: function(){
+    console.log("snapshot");
+    //click points will also appear as it is rigth now, the image is automatically downloaded
+    var dataURL = document.getElementById('SampleImage').src.replace("image/png", "image/octet-stream");//toDataURL("image/png");
+    //dataURL = dataURL.replace("image/png", "image/octet-stream");
+//    document.location.href = dataURL;
+    window.open(dataURL);
+  },
+  drawSampleImage: function(){
+    //Draws the image from the diff HO. In addition, if there are points
+    // already marked in the canvas re-display them, 
+    var context = document.getElementById("canvas").getContext('2d');
+    context.clearRect(0, 0, 659, 493);
+    var scale = this.state.zoomText;
+    // var image = new Image();
+    // image.src = "data:image/jpeg;base64,"+im_src;// +"\n--!>
+    var points = this.state.pos;
+    // image.onload = function(){
+      // context.drawImage(document.getElementById("video"),0,0)
+        //the next line for drawing a "|_" with the zoom text on the bottom left corner
+      context.beginPath();
+      context.moveTo(10, 450);
+      context.lineTo(10, 480);
+      context.lineTo(40, 480);
+      context.strokeStyle = "red"; //red  
+      context.font="10px Verdana";
+      //the following text should be linked to the zoom level
+      context.strokeText(scale,15,470);
+      context.stroke();
+      //if there are already some spots on the image redraw them
+      points.map(function(point){
+          console.log('iterating over points')
+          context.beginPath();
+          context.arc(point[0], point[1], 5, 0, Math.PI * 2);
+          context.stroke();
+          context.beginPath();
+          context.arc(point[0], point[1], 1, 0, Math.PI * 2);
+          context.stroke();
+
+      });
+    // };
+  },
+  drawPoint: function(x,y){
+    //called by clicking in the canvas, displays a circle with a dot in the center
+    var context = document.getElementById("canvas").getContext('2d');
+    //draw circle
+    context.beginPath();
+    context.arc(x, y, 5, 0, Math.PI * 2);
+    context.stroke();
+    //draw center point
+    context.beginPath();
+    context.arc(x, y, 1, 0, Math.PI * 2);
+    context.stroke();
+  },
+  deletePoints: function(){
+    console.log("deleting")
+    this.setState({pos: []});
+    },
+  getPosition: function (element) {
+    //adjust point position according to the position of the canvas in the web-page
+      var xPosition = 0;
+      var yPosition = 0;
+      
+      while (element) {
+          xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+          yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+          element = element.offsetParent;
+        }
+      return { x: xPosition, y: yPosition };
+  },
+  onClick: function(e){
+    var parentPosition = this.getPosition(e.currentTarget);
+    var x = e.clientX - parentPosition.x;
+    var y = e.clientY - parentPosition.y;
+    var aux = this.state.pos
+    aux.push([x,y])
+    this.setState({pos: aux})
+    this.drawPoint(x,y);
+    $.ajax({
+        url: '/onClick',
+        data: {'PosX': x, 'PosY': y},
+      type: 'PUT',
+        success: function(res) {
+            console.log(res);
+        },
+        error: function(error) {
+            console.log(error);
+        },
+    });
   },
   addCentringPoint: function(){
-
   },
   startCentring: function(){
   },
@@ -31,8 +119,8 @@ var SampleCentring = React.createClass({
     console.log("ligth on/off requested")
     var newLight = Number(!this.state.ligth)
     $.ajax({
-          url: '/mxcube/api/v0.1/samplecentring/light/move',
-          data: {'moveable': 'Light', 'position':newLight},
+          url: '/mxcube/api/v0.1/samplecentring/light/move?newpos=newLight',
+          data: {'moveable': 'Light', 'position':newLight},//not really needed, everything in the url (motor and newpos) 
         type: 'PUT',
           success: function(res) {
               console.log(res);
@@ -63,11 +151,12 @@ var SampleCentring = React.createClass({
   },
   zoomOut: function(ev){
     var newIndex = Math.max(0, Math.min(this.state.currentZoom-=1, 9))
-    this.setState({currentZoom: newIndex})
     var newZoom = this.state.zoomLevels[newIndex]
+    this.setState({currentZoom: newIndex})
+    this.setState({zoomText: newZoom})
     $.ajax({
-      url: '/mxcube/api/v0.1/samplecentring/zoom/move',
-      data: JSON.stringify({'moveable': 'Zoom', 'position': newZoom}, null, '\t'),
+      url: '/mxcube/api/v0.1/samplecentring/zoom/move?newpos='+newZoom,
+      data: JSON.stringify({'moveable': 'Zoom', 'position': newZoom}, null, '\t'),//not really needed, everything in the url (motor and newpos) 
       contentType: 'application/json;charset=UTF-8',
       type: 'PUT',
       success: function(res) {
@@ -82,8 +171,8 @@ var SampleCentring = React.createClass({
   push: function(id,data){
     console.log("push requested")
     $.ajax({
-      url: '/mxcube/api/v0.1/samplecentring/'+id+'/move',
-      data: {'moveable': id, 'position':data},
+      url: '/mxcube/api/v0.1/samplecentring/'+id+'/move?newpos='+data,
+      data: {'moveable': id, 'position':data},//not really needed, everything in the url (motor and newpos) 
       type: 'PUT',
       success: function(res) {
           console.log(res);
@@ -103,22 +192,32 @@ var SampleCentring = React.createClass({
       }
          return true;
       },
+  componentDidUpdate: function(){
+      this.drawSampleImage();
+      console.log('comp did update')
+    },
 
   render: function () {
-      return (
+    var videoStyle = {position:'absolute', top:0, left:0, zIndex:-1 };
+    var canvasStyle = {position:'relative', zIndex:1};
+//    <video id="video" style={videoStyle} poster="/mxcube/api/v0.1/samplecentring/camera/stream" />
+//    <img src="/Users/mikegu/Desktop/md2.jpg"  style={videoStyle} id='SampleImage' className="center-block img-responsive"> </img>
+    return (
                 <div>
-                    <img src="/Users/mikegu/Desktop/md2.jpg" className="center-block img-responsive"> </img>
+                    <canvas id="canvas" style={canvasStyle} height={493} width={659} onClick={this.onClick} />
+                    <video id="video" style={videoStyle} poster="/Users/mikegu/Desktop/md2.jpg" />
                     <hr></hr>
                     <div className="panel panel-info">
                         <div className="panel-heading">
                             <h3 className="panel-title">Controls</h3>
                         </div>
                         <div className="panel-body">
-                            <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-save"></i></button>                            
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.takeSnapshot}><i className="fa fa-2x fa-fw fa-save"></i></button>                            
                             <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-calculator"></i></button>                              
                             <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-arrows-v"></i></button>                            
                             <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-camera"></i></button>                            
                             <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-arrows"></i></button>
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.deletePoints}><i className="fa fa-2x fa-fw fa-times"></i></button>
                             <button type="button" className="btn btn-link  pull-center" onClick={this.zoomIn}><i className="fa fa-2x fa-fw fa fa-search-plus"></i></button>
                             <button type="button" className="btn btn-link  pull-center" onClick={this.zoomOut}><i className="fa fa-2x fa-fw fa fa-search-minus"></i></button>
                             <button type="button" className="btn btn-link  pull-center" onClick={this.lightOnOff}><i className="fa fa-2x fa-fw fa fa-lightbulb-o"></i></button>
