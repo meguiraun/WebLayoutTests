@@ -5,7 +5,8 @@ var SampleCentring = React.createClass({
       sampleName: 'Sample_42',
       currentZoom: 0,
       zoomLevels:["Zoom 1","Zoom 2","Zoom 3","Zoom 4","Zoom 5","Zoom 6","Zoom 7","Zoom 8","Zoom 9", "Zoom 10"],
-      zoomText: "Zoom 1"
+      zoomText: "Zoom 1",
+      light:0
     }
   },
   componentWillMount: function(){
@@ -13,28 +14,34 @@ var SampleCentring = React.createClass({
   aMethod: function(){
       console.log('aMethod Called')  
   },
-  lightOnOff: function(){
-
-  },
-  moveMotor: function(){
-
-  },
   takeSnapshot: function(){
-
   },
   addCentringPoint: function(){
 
   },
   startCentring: function(){
-
   },
   measureDistance: function(){
-
   },
   getBeamPosition: function(){
-
   },
   componentDidMount: function(){
+  },
+  lightOnOff: function(ev){
+    console.log("ligth on/off requested")
+    var newLight = Number(!this.state.ligth)
+    $.ajax({
+          url: '/mxcube/api/v0.1/samplecentring/light/move',
+          data: {'moveable': 'Light', 'position':newLight},
+        type: 'PUT',
+          success: function(res) {
+              console.log(res);
+              this.set.state({ligth:newLight})
+          },
+          error: function(error) {
+            console.log(error);
+          },
+      });
   },
   zoomIn: function(ev){
     var newIndex = Math.max(0, Math.min(this.state.currentZoom+=1, 9))
@@ -85,7 +92,7 @@ var SampleCentring = React.createClass({
         console.log(error);
         },
     });
-    },
+  },
   isNumberKey: function(ev){
       var charCode = (ev.which) ? ev.which : event.keyCode
       //be carefull, ascii 46 = '.', but 47='/' and 48='0', a better filtering required
@@ -114,6 +121,7 @@ var SampleCentring = React.createClass({
                             <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-arrows"></i></button>
                             <button type="button" className="btn btn-link  pull-center" onClick={this.zoomIn}><i className="fa fa-2x fa-fw fa fa-search-plus"></i></button>
                             <button type="button" className="btn btn-link  pull-center" onClick={this.zoomOut}><i className="fa fa-2x fa-fw fa fa-search-minus"></i></button>
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.lightOnOff}><i className="fa fa-2x fa-fw fa fa-lightbulb-o"></i></button>
                             <div class="input-group">
                               <span class="input-group-addon" id="basic-addon1">Kappa   </span>
                               <input type="number"  id="Kappa" step="0.01" min='0' max='360'  class="form-control" placeholder="kappa" aria-describedby="basic-addon1" onKeyPress={this.isNumberKey} onkeyup={this.isNumberKey}> </input>
