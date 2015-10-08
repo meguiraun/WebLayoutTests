@@ -11,14 +11,32 @@ var SampleCentring = React.createClass({
   aMethod: function(){
       console.log('aMethod Called')  
   },
+  lightOnOff: function(){
+
+  },
+  moveMotor: function(){
+
+  },
+  takeSnapshot: function(){
+
+  },
+  addCentringPoint: function(){
+
+  },
+  startCentring: function(){
+
+  },
+  measureDistance: function(){
+
+  },
+  getBeamPosition: function(){
+
+  },
+  componentDidMount: function(){
+  },
   render: function () {
       return (
-        <div className="col-md-12">
-            <div className="panel panel-primary text-center">
-                <div className="panel-heading">
-                    <h3 className="panel-title">Sample Centring</h3>
-                </div>
-                <div className="panel-body">
+                <div>
                     <img src="/Users/mikegu/Desktop/md2.jpg" className="center-block img-responsive"> </img>
                     <hr></hr>
                     <div className="panel panel-info">
@@ -26,22 +44,37 @@ var SampleCentring = React.createClass({
                             <h3 className="panel-title">Controls</h3>
                         </div>
                         <div className="panel-body">
-                            <a href="#"><i className="fa fa-2x fa-fw fa-save"></i></a>
-                            <a href="#"><i className="fa fa-2x fa-fw fa-calculator"></i></a>
-                            <a href="#"><i className="fa fa-2x fa-fw fa-arrows-v"></i></a>
-                            <a href="#"><i className="fa fa-2x fa-fw fa-camera"></i></a>
-                            <a href="#"><i className="fa fa-2x fa-fw fa-arrows"></i></a>
-                            <a href="#"><i className="fa fa-2x fa-fw fa-rotate-right"></i></a>
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-save"></i></button>                            
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-calculator"></i></button>                              
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-arrows-v"></i></button>                            
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-camera"></i></button>                            
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-arrows"></i></button>                          
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-rotate-right"></i></button>
+                            <button type="button" className="btn btn-link  pull-center" onClick={this.aMethod}><i className="fa fa-2x fa-fw fa-lightbulb-o"></i></button>
+                            <div class="input-group">
+                              <span class="input-group-addon" id="basic-addon1">Kappa   </span>
+                              <input type="number" step="0.01" min='0'  class="form-control" placeholder="kappa" aria-describedby="basic-addon1"> </input>
+                              <span class="input-group-addon" id="basic-addon1">Omega   </span>
+                              <input type="number" step="0.01" min='0' class="form-control" placeholder="omega" aria-describedby="basic-addon1"> </input>
+                              <span class="input-group-addon" id="basic-addon1">Phi   </span>
+                              <input type="number" step="0.01" min='0'  class="form-control" placeholder="Phi" aria-describedby="basic-addon1"> </input>
+                            </div>
                         </div>
                     </div>
                     <SingleSampleTree/>
                     <ExperimentConfiguration/>
-                    </div>
                 </div>
-        </div>
             );        
   },
 });
-React.render(<SampleCentring/>, document.getElementById('SampleCentringHere'));
+var EditableField = React.createClass({
+  
+   componentDidMount: function() {
+      $(this.refs.editable.getDOMNode()).editable();
+   }, 
 
+   render: function() {
+       return <p>{this.props.name}: <a href="#" ref="editable"  data-name={this.props.name} data-pk={this.props.id} data-url="/beam_line_update" data-type="text" data-title="Edit value">{this.props.value}</a></p>
+   } 
+})
 
