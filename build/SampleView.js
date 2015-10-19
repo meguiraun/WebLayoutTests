@@ -85,17 +85,48 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
         }
 
 
+        function drawLine(x0, y0, x1, y1) {
+            // Draw a line betweeen two points
+
+            context.strokeStyle = 'red';
+
+            context.beginPath();
+            context.moveTo(x0, y0);
+            context.lineTo(x1, y1);
+            context.stroke();
+        }
+
+
+        function drawDistanceLine() {
+            // Draw a line between the last two points clicked
+
+            var numPoints = points.length;
+
+            if (numPoints > 1) {
+                drawLine(points[numPoints - 2][0], points[numPoints - 2][1],
+                    points[numPoints - 1][0], points[numPoints - 1][1]);
+            }
+        }
+
+
+        function drawText(argText, x0, y0) {
+            // Draw text somewhere on the image
+
+            context.strokeStyle = 'red';
+            context.font = '10px Verdana';
+
+            context.beginPath();
+            context.strokeText(argText, x0, y0);
+            context.stroke();
+        }
+
+
         function drawScale() {
             // Draw an axes scale, along with the zoom level, in the lower left
 
-            context.beginPath();
-            context.moveTo(10, 450);
-            context.lineTo(10, 480);
-            context.lineTo(40, 480);
-            context.strokeStyle = 'red';
-            context.font = '10px Verdana';
-            context.strokeText(scale,15,470);
-            context.stroke();
+            drawText(scale, 15, 470);
+            drawLine(10, 450, 10, 480);
+            drawLine(10, 480, 40, 480);
         }
 
 
@@ -105,7 +136,7 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
             canvas = document.getElementById('canvas');
             context = canvas.getContext('2d');
             context.clearRect(0, 0, 659, 493);
-            context.drawImage(new_image, 10, 10);
+            context.drawImage(new_image, 0, 0);
         }
 
 
@@ -115,6 +146,7 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
             drawImage();
             drawScale();
             drawPoints();
+            drawDistanceLine();
         };
 
         // The source for the image - needs to be defined after 'onload'
