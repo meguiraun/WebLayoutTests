@@ -1,1 +1,4 @@
 build/.module-cache
+
+# vim files
+.*.swp
