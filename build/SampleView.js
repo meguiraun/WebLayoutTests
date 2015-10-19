@@ -60,7 +60,8 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
             points = this.state.pos,
             new_image = new Image,
             canvas = null,
-            context = null;
+            context = null,
+            canvas_size = [659, 493];
 
 
         function drawCircle(point, radius) {
@@ -103,7 +104,8 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
             var numPoints = points.length;
 
             if (numPoints > 1) {
-                drawLine(points[numPoints - 2][0], points[numPoints - 2][1],
+                drawLine(
+                    points[numPoints - 2][0], points[numPoints - 2][1],
                     points[numPoints - 1][0], points[numPoints - 1][1]);
             }
         }
@@ -113,7 +115,7 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
             // Draw text somewhere on the image
 
             context.strokeStyle = 'red';
-            context.font = '10px Verdana';
+            context.font = '11px Verdana';
 
             context.beginPath();
             context.strokeText(argText, x0, y0);
@@ -121,12 +123,41 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
         }
 
 
+        function drawDistanceText() {
+            // Display the distance measured between the last two points
+            // clicked
+
+            var numPoints = points.length, x0, y0, x1, y1, xDiff, yDiff,
+                distance;
+
+            if (numPoints > 1) {
+                x0 = points[numPoints - 1][0];
+                x1 = points[numPoints - 2][0];
+                y0 = points[numPoints - 1][1];
+                y1 = points[numPoints - 2][1];
+
+                xDiff = x1 - x0;
+                yDiff = y1 - y0;
+
+                distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+                distance = Math.round(distance * 100) / 100;
+
+                drawText('Point 1:   (' + x0 + ', ' + y0 + ')',
+                    canvas_size[0] - 150, canvas_size[1] - 63);
+                drawText('Point 2:   (' + x1 + ', ' + y1 + ')',
+                    canvas_size[0] - 150, canvas_size[1] - 43);
+                drawText('Distance: ' + distance + ' pixels',
+                    canvas_size[0] - 150, canvas_size[1] - 23);
+            }
+        }
+
+
         function drawScale() {
             // Draw an axes scale, along with the zoom level, in the lower left
 
-            drawText(scale, 15, 470);
-            drawLine(10, 450, 10, 480);
-            drawLine(10, 480, 40, 480);
+            drawText(scale, 15, canvas_size[1] - 23);
+            drawLine(10, canvas_size[1] - 43, 10, canvas_size[1] - 13);
+            drawLine(10, canvas_size[1] - 13, 40, canvas_size[1] - 13);
         }
 
 
@@ -135,18 +166,21 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
 
             canvas = document.getElementById('canvas');
             context = canvas.getContext('2d');
-            context.clearRect(0, 0, 659, 493);
+            context.clearRect(0, 0, canvas_size[0], canvas_size[1]);
             context.drawImage(new_image, 0, 0);
         }
 
 
         new_image.onload = function() {
             // Wait until the iamge is loaded to draw everything
+            // -- perhaps one should also wiat until the function called by the
+            //    onClick event has finished as well
 
             drawImage();
             drawScale();
             drawPoints();
             drawDistanceLine();
+            drawDistanceText();
         };
 
         // The source for the image - needs to be defined after 'onload'
