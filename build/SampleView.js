@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 'use strict';
 
-// Gloabl variables for this applicaiton
+// Global variables for this applicaiton
 var SAMPLEVIEW_APP = {
         SampleCentring: null,
         EditableField: null
@@ -556,6 +556,7 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
                 ), 
 
                 React.createElement(SingleSampleTree, null), 
+
                 React.createElement(ExperimentConfiguration, null)
 
             )

@@ -28,4 +28,3 @@ var SampleMain = React.createClass({displayName: "SampleMain",
             );
   },
 });
-//React.render(<SampleCentring/>, document.getElementById('SampleCentringHere'));

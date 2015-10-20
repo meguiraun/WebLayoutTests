@@ -89,12 +89,8 @@ var MainView = React.createClass({displayName: "MainView",
       )
     )
   )
-     );        
+     );
   },
 });
+
 React.render(React.createElement(MainView, null), document.getElementById('SampleCentringHere'));
-
-
-
-
-
