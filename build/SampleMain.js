@@ -21,7 +21,7 @@ var SampleMain = React.createClass({displayName: "SampleMain",
                     React.createElement("h3", {className: "panel-title"}, "Sample Centring")
                 ), 
                React.createElement("div", {className: "panel-body"}, 
-                    React.createElement(SampleCentring, null)
+                    React.createElement(SAMPLEVIEW_APP.SampleCentring, null)
                 )
             )
         )
