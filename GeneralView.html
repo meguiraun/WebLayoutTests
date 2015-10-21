@@ -7,6 +7,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0,
                 maximum-scale=1.0, user-scalable=no">
 
+        <!-- Make the app fullscreen on a smartphone.
+             Works in android if it is 'saved to the homescreen'.
+             Have not tested in iOS, but should work if 'made into an app' -->
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="icon" src="./build/css/mxcube_logo.png">
 
         <!-- Load JQuery -->
         <script type="text/javascript"
@@ -43,9 +49,12 @@
         <script src="http://underscorejs.org/underscore-min.js"></script>
         <script src="http://backbonejs.org/backbone-min.js"></script>
         <script src="./build/Functions.js"></script>
+
+        <link rel="stylesheet" type="text/css" src="./build/css/main.css">
     </head>
 
-    <body>
+    <body style="background-color:#2a2a2b">
+
         <div id="SampleCentringHere"> </div>
 
         <!-- Load javascript -->
@@ -53,10 +62,16 @@
         <script src="https://togetherjs.com/togetherjs-min.js"></script>
         -->
         <script src="./build/react.js"></script>
+
         <script src="./build/SampleTree.js"></script>
         <script src="./build/ExperimentConfig.js"></script>
         <script src="./build/SampleView.js"></script>
         <script src="./build/SampleMain.js"></script>
+
+        <!-- MainView.js renders html into the div "SampleCentringHere",
+             using item generated in the preceding js files -->
         <script src="./build/MainView.js"></script>
+
     </body>
+
 </html>

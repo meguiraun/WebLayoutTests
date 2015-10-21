@@ -172,13 +172,21 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
 
 
         new_image.onload = function() {
-            // Wait until the iamge is loaded to draw everything
+            // Wait until the image is loaded to draw everything
             // -- perhaps one should also wiat until the function called by the
             //    onClick event has finished as well
 
+            // Get the image from somewhere and display it
             drawImage();
+
+            // Draw a scale on top of the image
             drawScale();
+
+            // Redraw any points that might have been clicked
             drawPoints();
+
+            // If measuring distnaces, display a line between two points and
+            // the distnace measured
             drawDistanceLine();
             drawDistanceText();
         };
@@ -246,9 +254,6 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
         this.setState({pos: aux});
         // this.drawPoint(x, y);
 
-        document.getElementById('coordinateTextDisplay').innerHTML =
-            'coordinates:  (' + x + ', ' + y + ')';
-
         console.log('coordinates:  (' + x + ', ' + y + ')');
         console.log('onClick ended');
 
@@ -261,16 +266,6 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
             yDiff = aux[numPoints - 2][1] - aux[numPoints - 1][1];
             distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
             distance = Math.round(distance * 100) / 100;
-
-
-            document.getElementById('coordinateTextDisplay').innerHTML =
-                'point 1: ' + '(' +
-                aux[numPoints - 2][0] + ', ' +
-                aux[numPoints - 2][1] + ') , ' +
-                'point 2: ' + '(' +
-                aux[numPoints - 1][0] + ', ' +
-                aux[numPoints - 1][1] + '), ' +
-                'distance: ' + distance;
         }
 
         // $.ajax({
@@ -448,116 +443,129 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({displayName: "SampleCentring"
         return (
             React.createElement("div", null, 
 
-                React.createElement("canvas", {id: "canvas", style: canvasStyle, height: 493, 
-                    width: 659, onClick: this.onClick}, " "), 
+                React.createElement("div", {className: "col-xs-12 col-sm-12 col-md-8 col-lg-6"}, 
 
-                React.createElement("video", {id: "video", style: videoStyle, 
-                    poster: "./build/md2.jpg"}, " "), 
+                    /* The Video Image and Canvas */
+                    React.createElement("canvas", {id: "canvas", style: canvasStyle, 
+                        height: 493, width: 659, 
+                        onClick: this.onClick}, " "), 
 
-                React.createElement("div", {id: "coordinateTextDisplay"}, " "), 
+                    React.createElement("video", {id: "video", style: videoStyle, 
+                        poster: "./build/md2.jpg"}, " "), 
 
-                React.createElement("hr", null), 
+                    /* The camera and image controls */
+                    React.createElement("div", {className: "panel panel-info col-xs-12"}, 
 
-                React.createElement("div", {className: "panel panel-info"}, 
-
-                    React.createElement("div", {className: "panel-heading"}, 
-                        React.createElement("h3", {className: "panel-title"}, "Controls")
-                    ), 
-
-                    React.createElement("div", {className: "panel-body"}, 
-
-                        React.createElement("button", {type: "button", 
-                            className: "btn btn-link pull-center", 
-                            onClick: this.takeSnapshot}, 
-                            React.createElement("i", {className: "fa fa-2x fa-fw fa-save"})
+                        React.createElement("div", {className: "panel-heading"}, 
+                            React.createElement("h3", {className: "panel-title"}, "Controls")
                         ), 
 
-                        React.createElement("button", {type: "button", 
-                            className: "btn btn-link pull-center", 
-                            onClick: this.aMethod}, 
-                            React.createElement("i", {className: "fa fa-2x fa-fw fa-calculator"})
-                        ), 
+                        React.createElement("div", {className: "panel-body"}, 
 
-                        React.createElement("button", {type: "button", 
-                            className: "btn btn-link pull-center", 
-                            onClick: this.aMethod}, 
-                            React.createElement("i", {className: "fa fa-2x fa-fw fa-arrows-v"})
-                        ), 
+                            React.createElement("button", {type: "button", 
+                                className: "btn btn-link pull-center", 
+                                onClick: this.takeSnapshot}, 
+                                React.createElement("i", {className: "fa fa-2x fa-fw fa-save"})
+                            ), 
 
-                        React.createElement("button", {type: "button", 
-                            className: "btn btn-link pull-center", 
-                            onClick: this.aMethod}, 
-                            React.createElement("i", {className: "fa fa-2x fa-fw fa-camera"})
-                        ), 
+                            React.createElement("button", {type: "button", 
+                                className: "btn btn-link pull-center", 
+                                onClick: this.aMethod}, 
+                                React.createElement("i", {className: "fa fa-2x fa-fw fa-calculator"}
+                                )
+                            ), 
 
-                        React.createElement("button", {type: "button", 
-                            className: "btn btn-link pull-center", 
-                            onClick: this.aMethod}, 
-                            React.createElement("i", {className: "fa fa-2x fa-fw fa-arrows"})
-                        ), 
+                            React.createElement("button", {type: "button", 
+                                className: "btn btn-link pull-center", 
+                                onClick: this.aMethod}, 
+                                React.createElement("i", {className: "fa fa-2x fa-fw fa-arrows-v"})
+                            ), 
 
-                        React.createElement("button", {type: "button", 
-                            className: "btn btn-link pull-center", 
-                            onClick: this.deletePoints}, 
-                            React.createElement("i", {className: "fa fa-2x fa-fw fa-times"})
-                        ), 
+                            React.createElement("button", {type: "button", 
+                                className: "btn btn-link pull-center", 
+                                onClick: this.aMethod}, 
+                                React.createElement("i", {className: "fa fa-2x fa-fw fa-camera"})
+                            ), 
 
-                        React.createElement("button", {type: "button", 
-                            className: "btn btn-link pull-center", 
-                            onClick: this.zoomIn}, 
-                            React.createElement("i", {className: "fa fa-2x fa-fw fa fa-search-plus"}
+                            React.createElement("button", {type: "button", 
+                                className: "btn btn-link pull-center", 
+                                onClick: this.aMethod}, 
+                                React.createElement("i", {className: "fa fa-2x fa-fw fa-arrows"})
+                            ), 
+
+                            React.createElement("button", {type: "button", 
+                                className: "btn btn-link pull-center", 
+                                onClick: this.deletePoints}, 
+                                React.createElement("i", {className: "fa fa-2x fa-fw fa-times"})
+                            ), 
+
+                            React.createElement("button", {type: "button", 
+                                className: "btn btn-link pull-center", 
+                                onClick: this.zoomIn}, 
+                                React.createElement("i", {className: "fa fa-2x fa-fw fa" + ' ' +
+                                              "fa-search-plus"}
+                                )), 
+
+                            React.createElement("button", {type: "button", 
+                                className: "btn btn-link pull-center", 
+                                onClick: this.zoomOut}, 
+                                React.createElement("i", {className: "fa fa-2x fa-fw fa" + ' ' +
+                                              "fa-search-minus"}
                             )), 
 
-                        React.createElement("button", {type: "button", 
-                            className: "btn btn-link pull-center", 
-                            onClick: this.zoomOut}, 
-                            React.createElement("i", {className: "fa fa-2x fa-fw fa fa-search-minus"}
-                        )), 
+                            React.createElement("button", {type: "button", 
+                                className: "btn btn-link pull-center", 
+                                onClick: this.lightOnOff}, 
+                                React.createElement("i", {className: "fa fa-2x fa-fw fa" + ' ' +
+                                              "fa-lightbulb-o"}
+                                )
+                            ), 
 
-                        React.createElement("button", {type: "button", 
-                            className: "btn btn-link pull-center", 
-                            onClick: this.lightOnOff}, 
-                            React.createElement("i", {className: "fa fa-2x fa-fw fa fa-lightbulb-o"}
-                            )
-                        ), 
+                            React.createElement("div", {class: "input-group"}, 
 
-                        React.createElement("div", {class: "input-group"}, 
+                                React.createElement("span", {class: "input-group-addon", 
+                                    id: "basic-addon1"}, " Kappa"), 
+                                React.createElement("input", {type: "number", id: "Kappa", step: "0.01", 
+                                    min: "0", max: "360", 
+                                    class: "form-control", placeholder: "kappa", 
+                                    "aria-describedby": "basic-addon1", 
+                                    onKeyPress: this.isNumberKey, 
+                                    onkeyup: this.isNumberKey}, " "), 
 
-                            React.createElement("span", {class: "input-group-addon", id: "basic-addon1"}, 
-                                "Kappa"), 
-                            React.createElement("input", {type: "number", id: "Kappa", step: "0.01", 
-                                min: "0", max: "360", 
-                                class: "form-control", placeholder: "kappa", 
-                                "aria-describedby": "basic-addon1", 
-                                onKeyPress: this.isNumberKey, 
-                                onkeyup: this.isNumberKey}, " "), 
+                                React.createElement("span", {class: "input-group-addon", 
+                                    id: "basic-addon2"}, " Omega"), 
+                                React.createElement("input", {type: "number", id: "Omega", step: "0.01", 
+                                    min: "0", max: "360", 
+                                    class: "form-control", placeholder: "omega", 
+                                    "aria-describedby": "basic-addon2", 
+                                    intermediateChanges: "true", 
+                                    onKeyPress: this.isNumberKey}, " "), 
 
-                            React.createElement("span", {class: "input-group-addon", id: "basic-addon2"}, 
-                                "Omega"), 
-                            React.createElement("input", {type: "number", id: "Omega", step: "0.01", 
-                                min: "0", max: "360", 
-                                class: "form-control", placeholder: "omega", 
-                                "aria-describedby": "basic-addon2", 
-                                intermediateChanges: "true", 
-                                onKeyPress: this.isNumberKey}, " "), 
+                                React.createElement("span", {class: "input-group-addon", 
+                                    id: "basic-addon3"}, " Phi"), 
+                                React.createElement("input", {type: "number", id: "Phi", step: "0.01", 
+                                    min: "0", max: "360", 
+                                    class: "form-control", placeholder: "Phi", 
+                                    "aria-describedby": "basic-addon3", 
+                                    onKeyPress: this.isNumberKey}
+                                )
 
-                            React.createElement("span", {class: "input-group-addon", id: "basic-addon3"}, 
-                                "Phi"), 
-                            React.createElement("input", {type: "number", id: "Phi", step: "0.01", 
-                                min: "0", max: "360", 
-                                class: "form-control", placeholder: "Phi", 
-                                "aria-describedby": "basic-addon3", 
-                                onKeyPress: this.isNumberKey}
                             )
 
                         )
-
                     )
+
                 ), 
 
-                React.createElement(SingleSampleTree, null), 
+                React.createElement("div", {className: "col-xs-12 col-sm-12 col-md-4 col-lg-6"}, 
 
-                React.createElement(ExperimentConfiguration, null)
+                    /* The Queue */
+                    React.createElement(SAMPLETREE.SingleSampleTree, null), 
+
+                    /* The Experimental Configuration */
+                    React.createElement(ExperimentConfiguration, null)
+
+                )
 
             )
         );

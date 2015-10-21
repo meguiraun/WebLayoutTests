@@ -1,20 +1,20 @@
 /** @jsx React.DOM */
 var ExperimentConfiguration = React.createClass({displayName: "ExperimentConfiguration",
   addCentring: function(){
-    window.app_dispatcher.trigger("queue:new_item", 
-      { kind: "SampleCentring", 
+    window.app_dispatcher.trigger("queue:new_item",
+      { kind: "SampleCentring",
         text: "params",
       });
   },
   addCharacterisation: function(){
-    window.app_dispatcher.trigger("queue:new_item", 
-      { kind: "Characterisation", 
+    window.app_dispatcher.trigger("queue:new_item",
+      { kind: "Characterisation",
         text: "params",
       });
   },
   addStandardCollection: function(){
-    window.app_dispatcher.trigger("queue:new_item", 
-      { kind: "StandardCollection", 
+    window.app_dispatcher.trigger("queue:new_item",
+      { kind: "StandardCollection",
         text: "params",
       });
     console.log('event sent...')
@@ -24,7 +24,8 @@ var ExperimentConfiguration = React.createClass({displayName: "ExperimentConfigu
   addMeshCollection: function(){
   },
   render: function(){
-    return (React.createElement("div", {className: "panel panel-info"}, 
+    return (
+        React.createElement("div", {className: "panel panel-info col-xs-12"}, 
                       React.createElement("div", {className: "panel-heading"}, 
                         React.createElement("h3", {className: "panel-title"}, "Experiment Configuration")
                       ), 
