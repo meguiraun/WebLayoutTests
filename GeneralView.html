@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
     <head>
         <!-- Basic shtuff -->
         <title>MXCuBE</title>
@@ -12,55 +14,84 @@
              Have not tested in iOS, but should work if 'made into an app' -->
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <link rel="icon" src="./build/css/mxcube_logo.png">
+        <link rel="icon" href="./build/css/mxcube_logo.png">
 
-        <!-- Load JQuery -->
-        <script type="text/javascript"
-            src="http://code.jquery.com/jquery-latest.js"></script>
 
-        <!-- Load CSS -->
+        <!-- Load External CSS -->
         <link rel="stylesheet" type="text/css"
             href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+        <!--
         <link rel="stylesheet" type="text/css"
             href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css"
             href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
         <link rel="stylesheet" type="text/css"
-            src="./build/css/bootstrap-editable.css">
+            href="./build/css/font-awesome.min.css">
+        -->
+        <link rel="stylesheet" type="text/css"
+            href="./build/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css"
+            href="./build/css/bootstrap-theme.min.css">
 
-        <!-- Latest compiled and minified JavaScript -->
+
+        <!-- Load Local CSS -->
+        <link rel="stylesheet" type="text/css"
+            href="./build/css/bootstrap-editable.css">
+        <link rel="stylesheet" type="text/css" href="./build/css/mxcube.css">
+
+    </head>
+
+
+    <body>
+
+        <!-- One Div to Rule Them All -->
+        <div id="SampleCentringHere"> </div>
+
+
+        <!-- Load External JavaScript -->
+        <!--
+        <script type="text/javascript"
+            src="http://code.jquery.com/jquery-latest.js"></script>
         <script
             src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
         </script>
+        -->
+        <script src="./build/jquery-latest.js"></script>
+        <script src="./build/bootstrap.min.js"></script>
+
+        <!--
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js">
         </script>
+        -->
+        <script src="./build/react.js"></script>
         <script src="./build/bootstrap-editable.min.js"></script>
 
         <!-- Not sure about these two - local files on someone's machine?
             <script src="//fb.me/react-with-addons-0.11.1.js"></script>
             <script src="//fb.me/JSXTransformer-0.11.1.js"></script>
+            <script src="https://fb.me/react-with-addons-0.11.1.js"></script>
         -->
-        <script src="https://fb.me/react-with-addons-0.11.1.js"></script>
+        <script src="./build/react-with-addons-0.11.1.js"></script>
         <!--
         <script src="https://fb.me/JSXTransformer-0.11.1.js"></script>
         -->
 
+        <!--
+            Had some trouble with these files being occaisionally unavailable
         <script src="http://underscorejs.org/underscore-min.js"></script>
         <script src="http://backbonejs.org/backbone-min.js"></script>
+        -->
+        <script src="./build/underscore-min.js"></script>
+        <script src="./build/backbone-min.js"></script>
         <script src="./build/Functions.js"></script>
 
-        <link rel="stylesheet" type="text/css" src="./build/css/main.css">
-    </head>
-
-    <body style="background-color:#2a2a2b">
-
-        <div id="SampleCentringHere"> </div>
-
-        <!-- Load javascript -->
         <!--
         <script src="https://togetherjs.com/togetherjs-min.js"></script>
         -->
+
+
+        <!-- Load Local JavaScript -->
         <script src="./build/react.js"></script>
 
         <script src="./build/SampleTree.js"></script>
@@ -73,5 +104,6 @@
         <script src="./build/MainView.js"></script>
 
     </body>
+
 
 </html>

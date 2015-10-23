@@ -32,19 +32,19 @@ SAMPLEMAIN.SampleMain = React.createClass({displayName: "SampleMain",
 
     render: function() {
         return (
-        React.createElement("div", {className: "col-md-12"}, 
-            React.createElement("div", {className: "panel panel-primary text-center"}, 
+            React.createElement("div", {className: "col-xs-12"}, 
+                React.createElement("div", {className: "panel panel-primary text-center"}, 
 
-                React.createElement("div", {className: "panel-heading"}, 
-                    React.createElement("h3", {className: "panel-title"}, "Sample Centring")
-                ), 
+                    React.createElement("div", {className: "panel-heading"}, 
+                        React.createElement("h3", {className: "panel-title"}, "Sample Centering")
+                    ), 
 
-                React.createElement("div", {className: "panel-body"}, 
-                    React.createElement(SAMPLEVIEW_APP.SampleCentring, null)
+                    React.createElement("div", {className: "panel-body"}, 
+                        React.createElement(SAMPLEVIEW.SampleCentring, null)
+                    )
+
                 )
-
             )
-        )
         );
     }
 });

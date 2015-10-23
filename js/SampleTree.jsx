@@ -3,10 +3,14 @@
 /* eslint-disable no-console */
 'use strict';
 
+
 // Global variables for this applicaiton
 var SAMPLETREE = {
+
         SingleSampleTree: null,
+
         EditableField: null,
+
         params: {
             Characterisation : {
                 osc_range: { label: 'Oscillation range', default_value: 0.1 },
@@ -26,6 +30,38 @@ var SAMPLETREE = {
                     label: 'Number of images',
                     default_value: 1 }
             }
+        },
+
+        queueInfo: {
+            sampleID: '42',
+
+            // status: 0 not done, 1 done, 2 failed
+            list: [
+                {
+                    name: 'SampleCentring_1',
+                    status: 0,
+                    params: {},
+                    queueID: 1
+                },
+                {
+                    name: 'Characterisation_1',
+                    status: 1,
+                    params: {},
+                    queueID: 2
+                },
+                {
+                    name : 'SampleCentring_1',
+                    status: 0,
+                    params: {},
+                    queueID: 3
+                },
+                {
+                    name: 'StandardCollection_1',
+                    status: 2,
+                    params: {},
+                    queueID: 4
+                }
+            ]
         }
     },
 
@@ -35,54 +71,61 @@ var SAMPLETREE = {
 
 SAMPLETREE.SingleSampleTree = React.createClass({
 
+
     getInitialState: function() {
         console.log('SAMPLETREE.SingleSampleTree getInitialState called');
 
-        // status: 0 not done, 1 done, 2 failed
-        return {
-            list: [
-                {
-                    name: 'SampleCentring_1',
-                    status: 0,
-                    params:{}
-                },
-                {
-                    name: 'Characterisation_1',
-                    status: 1,
-                    params:{}
-                },
-                {
-                    name : 'SampleCentring_1',
-                    status: 0,
-                    params:{}
-                },
-                {
-                    name: 'StandardCollection_1',
-                    status: 2,
-                    params:{}
-                }
-            ],
-            sampleName: 'Sample_42'
-        };
+        return SAMPLETREE.queueInfo;
     },
 
 
     addQueueItem: function(newItem) {
-        var auxList = this.state.list;
-        auxList.push(
-            {name: this.generateElementId(
-                newItem['kind']), status:0, params:{}});
-        this.setState({list: auxList});
+
+        SAMPLETREE.queueInfo.list.push(
+            {
+                name: this.generateElementId(newItem['kind']),
+                status: 0,
+                params: {},
+                queueID: SAMPLETREE.queueInfo.list.length + 1
+            }
+        );
+
+        this.setState({list: SAMPLETREE.queueInfo.list});
     },
 
 
     removeQueueItem: function(itemToRemove) {
-        console.log(itemToRemove);
-        var auxList = this.state.list,
-            index = auxList.indexOf(itemToRemove);
 
-        auxList.splice(index, 1);
-        this.setState({list: auxList});
+        var i, index = 0;
+
+        console.log('itemToRemove: ' + itemToRemove);
+        console.log('length: ' + SAMPLETREE.queueInfo.list.length);
+
+        // Search for the array index of item in the list that should be
+        // removed
+        for (i = 0; i < SAMPLETREE.queueInfo.list.length; i += 1) {
+
+            if (SAMPLETREE.queueInfo.list[i].queueID === itemToRemove) {
+                index = i;
+                console.log('will remove: ' +
+                    SAMPLETREE.queueInfo.list[i].name);
+            }
+        }
+
+        if (index >= 0) {
+            // Remove the item with the array index found
+            SAMPLETREE.queueInfo.list.splice(index, 1);
+
+            // Change the queue item indicies where needed
+            for (i = 0; i < SAMPLETREE.queueInfo.list.length; i += 1) {
+
+                if (SAMPLETREE.queueInfo.list[i].queueID > itemToRemove) {
+                    SAMPLETREE.queueInfo.list[i].queueID -= 1;
+                }
+            }
+
+            this.setState({list: SAMPLETREE.queueInfo.list});
+        }
     },
 
 
@@ -108,8 +151,6 @@ SAMPLETREE.SingleSampleTree = React.createClass({
 
 
     formatParameters: function(paramType) {
-        // console.log('paramType: ' + paramType);
-        // console.log('paramType: ' + paramType.split('_')[0]);
 
         var fields = [], key, paramDict, value, name;
 
@@ -154,14 +195,11 @@ SAMPLETREE.SingleSampleTree = React.createClass({
 
     render: function() {
 
+        console.log('rendering queue items');
+
+        var that = this, arr = [], key;
+
         this.getInitialState();
-
-        // New style so the buttons does not mess because of the small
-        // margin between list items
-        var listStyle = {marginTop: '8px'},
-            that = this, arr = [], key;
-
-        console.log('rendering');
 
         for (key in this.state.list) {
             arr.push(this.state.list[key]);
@@ -169,82 +207,98 @@ SAMPLETREE.SingleSampleTree = React.createClass({
 
         return (
 
-            <div className='panel panel-info col-xs-12'>
-                <div className='panel-heading'>
-                    <h1 className='panel-title'>Queue</h1>
-                </div>
+            <div className='col-xs-12'>
+                <div className='panel panel-info'>
 
-                <div className='panel-body'>
-
-                    <div className='col-xs-3 col-xs-offset-3'>
-
-                        <button type='button'
-                            className='btn btn-block btn-success'
-                            onClick={this.aMethod}>Run
-                            <i className='fa fa-play-circle fa-fw'></i>
-                        </button>
-
+                    <div className='panel-heading'>
+                        <h1 className='panel-title'>Queue</h1>
                     </div>
 
-                    <div className='col-xs-3'>
+                    <div className='panel-body'>
 
-                        <button type='button'
-                            className='btn btn-block btn-danger'
-                            onClick={this.aMethod}>Stop
-                            <i className='fa fa-stop fa-fw'></i>
-                        </button>
+                        <div className='col-xs-5 col-xs-offset-2'>
 
-                    </div>
+                            <button type='button'
+                                className='btn btn-block btn-success'
+                                onClick={this.aMethod}>Run
+                                <i className='fa fa-play-circle fa-fw'></i>
+                            </button>
 
-                    <div className='col-xs-12'>
+                        </div>
 
-                        <b>Sample_42</b>
+                        <div className='col-xs-5'>
 
-                        <ul className='lead list'>
-                            <ol className='text-left' >
+                            <button type='button'
+                                className='btn btn-block btn-danger'
+                                onClick={this.aMethod}>Stop
+                                <i className='fa fa-stop fa-fw'></i>
+                            </button>
 
-                                {arr.map(function(listValue) {
+                        </div>
 
-                                    return <li style={listStyle}>
+                        <div className='col-xs-12 text-center'>
+                            <b>Sample {SAMPLETREE.queueInfo.sampleID}</b>
+                        </div>
+
+                        {arr.map(function(listValue) {
+
+                            return (
+                                <div className='text-left col-xs-12 queue-list'>
+
+                                    <div className="col-xs-5 queue-list">
+                                        <b>{listValue.queueID}. </b>
+
                                         <a data-toggle='collapse'
+                                            className='queue-list'
                                             href={'#collapse' +
-                                                listValue['name']} >
-                                                {listValue['name']}
+                                                listValue.name} >
+                                                {listValue.name}
                                         </a>
 
+                                        <div className='collapse'
+                                            id={'collapse' + listValue.name}>
+                                            <div className='well'>
+                                                {that.formatParameters(
+                                                    listValue.name)}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className='text-right col-xs-7'>
+
                                         <button type='button'
-                                                className='btn btn-link  pull-right'
-                                                onClick={that.aMethod}>
-                                            <i className={that.formatStatus(listValue['status'])}>
+                                                className='btn btn-link
+                                                queue-list'
+                                                onClick={
+                                                    that.removeQueueItem.bind(
+                                                        that,
+                                                        listValue.queueID
+                                                    )
+                                                }>
+                                            <i className='fa fa-fw fa-eraser'>
                                             </i>
                                         </button>
 
                                         <button type='button'
-                                                className='btn btn-link  pull-right'
-                                                onClick={that.runThisItem.bind(that,listValue['name'])}>
-                                            <i className='fa fa-fw fa-play-circle'></i>
+                                                className='btn btn-link'
+                                                onClick={that.runThisItem.bind(
+                                                    that,listValue.name)}>
+                                            <i className='fa fa-fw fa-play-circle'>
+                                            </i>
                                         </button>
 
                                         <button type='button'
-                                                className='btn btn-link  pull-right'
-                                                onClick={that.removeQueueItem.bind(that,listValue['name'])}>
-                                            <i className='fa fa-fw fa-eraser'></i></button>
-
-                                    <div className='collapse'
-                                            id={'collapse' + listValue['name']}>
-                                        <div className='well'>
-                                            {that.formatParameters(listValue['name'])}
-                                        </div>
+                                                className='btn btn-link'
+                                                onClick={that.aMethod}>
+                                            <i className={that.formatStatus(
+                                                listValue.status)}></i>
+                                        </button>
                                     </div>
-
-                                    </li>;
-                                })}
-
-                            </ol>
-                        </ul>
+                                </div>
+                            );
+                        })}
 
                     </div>
-
                 </div>
             </div>
         );
@@ -254,14 +308,19 @@ SAMPLETREE.SingleSampleTree = React.createClass({
 
 SAMPLETREE.EditableField = React.createClass({
 
+
     componentDidMount: function() {
         $(this.refs.editable.getDOMNode()).editable();
     },
 
+
     render: function() {
-        return <p>{this.props.name}: <a href='#' ref='editable'
-            data-name={this.props.name} data-pk={this.props.id}
-            data-url='/beam_line_update' data-type='text'
-            data-title='Edit value'>{this.props.value}</a></p>;
+        return <p>{this.props.name}:
+                <a href='#' ref='editable' data-name={this.props.name}
+                    data-pk={this.props.id} data-url='/beam_line_update'
+                    data-type='text' data-title='Edit value'>
+                    {this.props.value}
+                </a>
+            </p>;
     }
 });

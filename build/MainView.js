@@ -37,16 +37,15 @@ MAINVIEW.MainView = React.createClass({displayName: "MainView",
     render: function() {
 
         return (
-            React.createElement("div", null, 
+            React.createElement("div", {className: "container-fluid fill-height fill-width"}, 
+
+                    /* The navigation bar */
+                React.createElement("nav", {className: "navbar navbar-default navbar-inverse navbar-fixed-top"}, 
 
 
-                /* The navigation bar */
-                React.createElement("div", {className: "navbar navbar-default navbar-static-top" + ' ' +
-                    "navbar-fixed-top navbar-inverse"}, 
+                    React.createElement("div", {className: "container-fluid"}, 
 
-                    React.createElement("div", {className: "container"}, 
-
-                        /* The navigation bar on large screens */
+                        /* Header and brand */
                         React.createElement("div", {className: "navbar-header"}, 
 
                             React.createElement("button", {type: "button", className: "navbar-toggle", 
@@ -60,13 +59,14 @@ MAINVIEW.MainView = React.createClass({displayName: "MainView",
                             ), 
 
                             React.createElement("a", {className: "navbar-brand", 
-                                href: "http://mxcube.github.io/mxcube/"}, 
-                                React.createElement("img", {height: "20", alt: "Brand", 
+                                href: "#"}, 
+                                React.createElement("img", {alt: "Brand", height: "20", width: "40", 
                                     src: "./build/css/mxcube_logo.png"}, " ")
                             )
                         ), 
 
-                        /* The navigation bar on small screens */
+
+                        /* Buttons and links */
                         React.createElement("div", {className: "collapse navbar-collapse", 
                                 id: "navbar-ex-collapse"}, 
 
@@ -76,14 +76,12 @@ MAINVIEW.MainView = React.createClass({displayName: "MainView",
                                 ), 
                                 React.createElement("li", null, 
                                     React.createElement("a", {href: "#"}, "Contacts")
+                                ), 
+                                React.createElement("li", null, 
+                                    React.createElement("a", {href: "#"}, "Signed in as Patxi - Log out")
                                 )
-                            ), 
+                            )
 
-                            React.createElement("p", {className: "navbar-left navbar-text"}, 
-                                "Signed in as Patxi"), 
-
-                            React.createElement("a", {className: "btn btn-default navbar-btn"}, 
-                                "Log out")
                         )
 
                     )
@@ -108,7 +106,7 @@ MAINVIEW.MainView = React.createClass({displayName: "MainView",
                 /* The main experimental control panel */
                 React.createElement("div", {className: "col-md-10"}, 
 
-                    React.createElement("div", {className: "col-md-12"}, 
+                    React.createElement("div", {className: "col-xs-12"}, 
 
                         React.createElement("div", {className: "panel panel-primary text-center"}, 
                             React.createElement("div", {className: "panel-heading"}, 
@@ -123,7 +121,7 @@ MAINVIEW.MainView = React.createClass({displayName: "MainView",
                     ), 
 
                     /* The progress bar */
-                    React.createElement("div", {className: "col-md-12"}, 
+                    React.createElement("div", {className: "col-xs-12"}, 
 
                         React.createElement("div", {className: "active progress" + ' ' +
                                 "progress-striped"}, 
@@ -153,7 +151,6 @@ MAINVIEW.MainView = React.createClass({displayName: "MainView",
 
                     )
                 )
-
             )
         );
     }

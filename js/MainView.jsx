@@ -37,16 +37,15 @@ MAINVIEW.MainView = React.createClass({
     render: function() {
 
         return (
-            <div>
+            <div className="container-fluid fill-height fill-width">
+
+                    {/* The navigation bar */}
+                <nav className="navbar navbar-default navbar-inverse navbar-fixed-top">
 
 
-                {/* The navigation bar */}
-                <div className='navbar navbar-default navbar-static-top
-                    navbar-fixed-top navbar-inverse'>
+                    <div className='container-fluid'>
 
-                    <div className='container'>
-
-                        {/* The navigation bar on large screens */}
+                        {/* Header and brand */}
                         <div className='navbar-header'>
 
                             <button type='button' className='navbar-toggle'
@@ -60,13 +59,14 @@ MAINVIEW.MainView = React.createClass({
                             </button>
 
                             <a className='navbar-brand'
-                                href='http://mxcube.github.io/mxcube/'>
-                                <img height='20' alt='Brand'
+                                href='#'>
+                                <img alt='Brand' height='20' width='40'
                                     src='./build/css/mxcube_logo.png'> </img>
                             </a>
                         </div>
 
-                        {/* The navigation bar on small screens */}
+
+                        {/* Buttons and links */}
                         <div className='collapse navbar-collapse'
                                 id='navbar-ex-collapse'>
 
@@ -77,18 +77,16 @@ MAINVIEW.MainView = React.createClass({
                                 <li>
                                     <a href='#'>Contacts</a>
                                 </li>
+                                <li>
+                                    <a href='#'>Signed in as Patxi - Log out</a>
+                                </li>
                             </ul>
 
-                            <p className='navbar-left navbar-text'>
-                                Signed in as Patxi</p>
-
-                            <a className='btn btn-default navbar-btn'>
-                                Log out</a>
                         </div>
 
                     </div>
 
-                </div>
+                </nav>
 
 
                 {/* Go to another page */}
@@ -108,7 +106,7 @@ MAINVIEW.MainView = React.createClass({
                 {/* The main experimental control panel */}
                 <div className='col-md-10'>
 
-                    <div className='col-md-12'>
+                    <div className='col-xs-12'>
 
                         <div className='panel panel-primary text-center'>
                             <div className='panel-heading'>
@@ -123,7 +121,7 @@ MAINVIEW.MainView = React.createClass({
                     </div>
 
                     {/* The progress bar */}
-                    <div className='col-md-12'>
+                    <div className='col-xs-12'>
 
                         <div className='active progress
                                 progress-striped'>
@@ -153,7 +151,6 @@ MAINVIEW.MainView = React.createClass({
 
                     </div>
                 </div>
-
             </div>
         );
     }

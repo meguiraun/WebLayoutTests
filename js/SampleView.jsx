@@ -4,7 +4,7 @@
 'use strict';
 
 // Global variables for this applicaiton
-var SAMPLEVIEW_APP = {
+var SAMPLEVIEW = {
         SampleCentring: null,
         EditableField: null
     },
@@ -13,7 +13,7 @@ var SAMPLEVIEW_APP = {
     React;
 
 
-SAMPLEVIEW_APP.SampleCentring = React.createClass({
+SAMPLEVIEW.SampleCentring = React.createClass({
 
 
     getInitialState: function() {
@@ -443,7 +443,7 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({
         return (
             <div>
 
-                <div className='col-xs-12 col-sm-12 col-md-8 col-lg-6'>
+                <div className='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
 
                     {/* The Video Image and Canvas */}
                     <canvas id='canvas' style={canvasStyle}
@@ -452,120 +452,126 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({
 
                     <video id='video' style={videoStyle}
                         poster='./build/md2.jpg' > </video>
+                </div>
+
+                <div className='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
 
                     {/* The camera and image controls */}
-                    <div className='panel panel-info col-xs-12'>
+                    <div className='col-xs-12 col-sm-12 col-md-12 col-lg-4 '>
+                        <div className='panel panel-info'>
 
-                        <div className='panel-heading'>
-                            <h3 className='panel-title'>Controls</h3>
-                        </div>
-
-                        <div className='panel-body'>
-
-                            <button type='button'
-                                className='btn btn-link pull-center'
-                                onClick={this.takeSnapshot}>
-                                <i className='fa fa-2x fa-fw fa-save'></i>
-                            </button>
-
-                            <button type='button'
-                                className='btn btn-link pull-center'
-                                onClick={this.aMethod}>
-                                <i className='fa fa-2x fa-fw fa-calculator'>
-                                </i>
-                            </button>
-
-                            <button type='button'
-                                className='btn btn-link pull-center'
-                                onClick={this.aMethod}>
-                                <i className='fa fa-2x fa-fw fa-arrows-v'></i>
-                            </button>
-
-                            <button type='button'
-                                className='btn btn-link pull-center'
-                                onClick={this.aMethod}>
-                                <i className='fa fa-2x fa-fw fa-camera'></i>
-                            </button>
-
-                            <button type='button'
-                                className='btn btn-link pull-center'
-                                onClick={this.aMethod}>
-                                <i className='fa fa-2x fa-fw fa-arrows'></i>
-                            </button>
-
-                            <button type='button'
-                                className='btn btn-link pull-center'
-                                onClick={this.deletePoints}>
-                                <i className='fa fa-2x fa-fw fa-times'></i>
-                            </button>
-
-                            <button type='button'
-                                className='btn btn-link pull-center'
-                                onClick={this.zoomIn}>
-                                <i className='fa fa-2x fa-fw fa
-                                              fa-search-plus'>
-                                </i></button>
-
-                            <button type='button'
-                                className='btn btn-link pull-center'
-                                onClick={this.zoomOut}>
-                                <i className='fa fa-2x fa-fw fa
-                                              fa-search-minus'>
-                            </i></button>
-
-                            <button type='button'
-                                className='btn btn-link pull-center'
-                                onClick={this.lightOnOff}>
-                                <i className='fa fa-2x fa-fw fa
-                                              fa-lightbulb-o'>
-                                </i>
-                            </button>
-
-                            <div class='input-group'>
-
-                                <span class='input-group-addon'
-                                    id='basic-addon1'> Kappa</span>
-                                <input type='number' id='Kappa' step='0.01'
-                                    min='0' max='360'
-                                    class='form-control' placeholder='kappa'
-                                    aria-describedby='basic-addon1'
-                                    onKeyPress={this.isNumberKey}
-                                    onkeyup={this.isNumberKey}> </input>
-
-                                <span class='input-group-addon'
-                                    id='basic-addon2'> Omega</span>
-                                <input type='number' id='Omega' step='0.01'
-                                    min='0' max='360'
-                                    class='form-control' placeholder='omega'
-                                    aria-describedby='basic-addon2'
-                                    intermediateChanges='true'
-                                    onKeyPress={this.isNumberKey}> </input>
-
-                                <span class='input-group-addon'
-                                    id='basic-addon3'> Phi</span>
-                                <input type='number' id='Phi' step='0.01'
-                                    min='0' max='360'
-                                    class='form-control' placeholder='Phi'
-                                    aria-describedby='basic-addon3'
-                                    onKeyPress={this.isNumberKey}>
-                                </input>
-
+                            <div className='panel-heading'>
+                                <h3 className='panel-title'>Controls</h3>
                             </div>
 
+                            <div className='panel-body'>
+
+                                <button type='button'
+                                    className='btn btn-link pull-center'
+                                    onClick={this.takeSnapshot}>
+                                    <i className='fa fa-2x fa-fw fa-save'></i>
+                                </button>
+
+                                <button type='button'
+                                    className='btn btn-link pull-center'
+                                    onClick={this.aMethod}>
+                                    <i className='fa fa-2x fa-fw fa-calculator'>
+                                    </i>
+                                </button>
+
+                                <button type='button'
+                                    className='btn btn-link pull-center'
+                                    onClick={this.aMethod}>
+                                    <i className='fa fa-2x fa-fw fa-arrows-v'>
+                                    </i>
+                                </button>
+
+                                <button type='button'
+                                    className='btn btn-link pull-center'
+                                    onClick={this.aMethod}>
+                                    <i className='fa fa-2x fa-fw fa-camera'></i>
+                                </button>
+
+                                <button type='button'
+                                    className='btn btn-link pull-center'
+                                    onClick={this.aMethod}>
+                                    <i className='fa fa-2x fa-fw fa-arrows'></i>
+                                </button>
+
+                                <button type='button'
+                                    className='btn btn-link pull-center'
+                                    onClick={this.deletePoints}>
+                                    <i className='fa fa-2x fa-fw fa-times'></i>
+                                </button>
+
+                                <button type='button'
+                                    className='btn btn-link pull-center'
+                                    onClick={this.zoomIn}>
+                                    <i className='fa fa-2x fa-fw fa
+                                                  fa-search-plus'>
+                                    </i></button>
+
+                                <button type='button'
+                                    className='btn btn-link pull-center'
+                                    onClick={this.zoomOut}>
+                                    <i className='fa fa-2x fa-fw fa
+                                                  fa-search-minus'>
+                                </i></button>
+
+                                <button type='button'
+                                    className='btn btn-link pull-center'
+                                    onClick={this.lightOnOff}>
+                                    <i className='fa fa-2x fa-fw fa
+                                                  fa-lightbulb-o'>
+                                    </i>
+                                </button>
+
+                                <div class='input-group'>
+
+                                    <span class='input-group-addon'
+                                        id='basic-addon1'> Kappa</span>
+                                    <input type='number' id='Kappa' step='0.01'
+                                        min='0' max='360'
+                                        class='form-control' placeholder='kappa'
+                                        aria-describedby='basic-addon1'
+                                        onKeyPress={this.isNumberKey}
+                                        onkeyup={this.isNumberKey}> </input>
+
+                                    <span class='input-group-addon'
+                                        id='basic-addon2'> Omega</span>
+                                    <input type='number' id='Omega' step='0.01'
+                                        min='0' max='360'
+                                        class='form-control' placeholder='omega'
+                                        aria-describedby='basic-addon2'
+                                        intermediateChanges='true'
+                                        onKeyPress={this.isNumberKey}> </input>
+
+                                    <span class='input-group-addon'
+                                        id='basic-addon3'> Phi</span>
+                                    <input type='number' id='Phi' step='0.01'
+                                        min='0' max='360'
+                                        class='form-control' placeholder='Phi'
+                                        aria-describedby='basic-addon3'
+                                        onKeyPress={this.isNumberKey}>
+                                    </input>
+
+                                </div>
+
+                            </div>
                         </div>
                     </div>
 
-                </div>
-
-                <div className='col-xs-12 col-sm-12 col-md-4 col-lg-6'>
+                <div className='col-xs-12 col-sm-12 col-md-12 col-lg-8'>
 
                     {/* The Queue */}
                     <SAMPLETREE.SingleSampleTree/>
 
                     {/* The Experimental Configuration */}
-                    <ExperimentConfiguration/>
+                    <EXPERIMENTCONFIG.ExperimentConfiguration/>
 
                 </div>
+                </div>
+
 
             </div>
         );
@@ -573,7 +579,7 @@ SAMPLEVIEW_APP.SampleCentring = React.createClass({
 });
 
 
-SAMPLEVIEW_APP.EditableField = React.createClass({
+SAMPLEVIEW.EditableField = React.createClass({
 
 
     componentDidMount: function() {

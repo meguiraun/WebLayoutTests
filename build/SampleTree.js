@@ -3,10 +3,14 @@
 /* eslint-disable no-console */
 'use strict';
 
+
 // Global variables for this applicaiton
 var SAMPLETREE = {
+
         SingleSampleTree: null,
+
         EditableField: null,
+
         params: {
             Characterisation : {
                 osc_range: { label: 'Oscillation range', default_value: 0.1 },
@@ -26,6 +30,38 @@ var SAMPLETREE = {
                     label: 'Number of images',
                     default_value: 1 }
             }
+        },
+
+        queueInfo: {
+            sampleID: '42',
+
+            // status: 0 not done, 1 done, 2 failed
+            list: [
+                {
+                    name: 'SampleCentring_1',
+                    status: 0,
+                    params: {},
+                    queueID: 1
+                },
+                {
+                    name: 'Characterisation_1',
+                    status: 1,
+                    params: {},
+                    queueID: 2
+                },
+                {
+                    name : 'SampleCentring_1',
+                    status: 0,
+                    params: {},
+                    queueID: 3
+                },
+                {
+                    name: 'StandardCollection_1',
+                    status: 2,
+                    params: {},
+                    queueID: 4
+                }
+            ]
         }
     },
 
@@ -35,54 +71,61 @@ var SAMPLETREE = {
 
 SAMPLETREE.SingleSampleTree = React.createClass({displayName: "SingleSampleTree",
 
+
     getInitialState: function() {
         console.log('SAMPLETREE.SingleSampleTree getInitialState called');
 
-        // status: 0 not done, 1 done, 2 failed
-        return {
-            list: [
-                {
-                    name: 'SampleCentring_1',
-                    status: 0,
-                    params:{}
-                },
-                {
-                    name: 'Characterisation_1',
-                    status: 1,
-                    params:{}
-                },
-                {
-                    name : 'SampleCentring_1',
-                    status: 0,
-                    params:{}
-                },
-                {
-                    name: 'StandardCollection_1',
-                    status: 2,
-                    params:{}
-                }
-            ],
-            sampleName: 'Sample_42'
-        };
+        return SAMPLETREE.queueInfo;
     },
 
 
     addQueueItem: function(newItem) {
-        var auxList = this.state.list;
-        auxList.push(
-            {name: this.generateElementId(
-                newItem['kind']), status:0, params:{}});
-        this.setState({list: auxList});
+
+        SAMPLETREE.queueInfo.list.push(
+            {
+                name: this.generateElementId(newItem['kind']),
+                status: 0,
+                params: {},
+                queueID: SAMPLETREE.queueInfo.list.length + 1
+            }
+        );
+
+        this.setState({list: SAMPLETREE.queueInfo.list});
     },
 
 
     removeQueueItem: function(itemToRemove) {
-        console.log(itemToRemove);
-        var auxList = this.state.list,
-            index = auxList.indexOf(itemToRemove);
 
-        auxList.splice(index, 1);
-        this.setState({list: auxList});
+        var i, index = 0;
+
+        console.log('itemToRemove: ' + itemToRemove);
+        console.log('length: ' + SAMPLETREE.queueInfo.list.length);
+
+        // Search for the array index of item in the list that should be
+        // removed
+        for (i = 0; i < SAMPLETREE.queueInfo.list.length; i += 1) {
+
+            if (SAMPLETREE.queueInfo.list[i].queueID === itemToRemove) {
+                index = i;
+                console.log('will remove: ' +
+                    SAMPLETREE.queueInfo.list[i].name);
+            }
+        }
+
+        if (index >= 0) {
+            // Remove the item with the array index found
+            SAMPLETREE.queueInfo.list.splice(index, 1);
+
+            // Change the queue item indicies where needed
+            for (i = 0; i < SAMPLETREE.queueInfo.list.length; i += 1) {
+
+                if (SAMPLETREE.queueInfo.list[i].queueID > itemToRemove) {
+                    SAMPLETREE.queueInfo.list[i].queueID -= 1;
+                }
+            }
+
+            this.setState({list: SAMPLETREE.queueInfo.list});
+        }
     },
 
 
@@ -108,8 +151,6 @@ SAMPLETREE.SingleSampleTree = React.createClass({displayName: "SingleSampleTree"
 
 
     formatParameters: function(paramType) {
-        // console.log('paramType: ' + paramType);
-        // console.log('paramType: ' + paramType.split('_')[0]);
 
         var fields = [], key, paramDict, value, name;
 
@@ -154,14 +195,11 @@ SAMPLETREE.SingleSampleTree = React.createClass({displayName: "SingleSampleTree"
 
     render: function() {
 
+        console.log('rendering queue items');
+
+        var that = this, arr = [], key;
+
         this.getInitialState();
-
-        // New style so the buttons does not mess because of the small
-        // margin between list items
-        var listStyle = {marginTop: '8px'},
-            that = this, arr = [], key;
-
-        console.log('rendering');
 
         for (key in this.state.list) {
             arr.push(this.state.list[key]);
@@ -169,82 +207,98 @@ SAMPLETREE.SingleSampleTree = React.createClass({displayName: "SingleSampleTree"
 
         return (
 
-            React.createElement("div", {className: "panel panel-info col-xs-12"}, 
-                React.createElement("div", {className: "panel-heading"}, 
-                    React.createElement("h1", {className: "panel-title"}, "Queue")
-                ), 
+            React.createElement("div", {className: "col-xs-12"}, 
+                React.createElement("div", {className: "panel panel-info"}, 
 
-                React.createElement("div", {className: "panel-body"}, 
-
-                    React.createElement("div", {className: "col-xs-3 col-xs-offset-3"}, 
-
-                        React.createElement("button", {type: "button", 
-                            className: "btn btn-block btn-success", 
-                            onClick: this.aMethod}, "Run", 
-                            React.createElement("i", {className: "fa fa-play-circle fa-fw"})
-                        )
-
+                    React.createElement("div", {className: "panel-heading"}, 
+                        React.createElement("h1", {className: "panel-title"}, "Queue")
                     ), 
 
-                    React.createElement("div", {className: "col-xs-3"}, 
+                    React.createElement("div", {className: "panel-body"}, 
 
-                        React.createElement("button", {type: "button", 
-                            className: "btn btn-block btn-danger", 
-                            onClick: this.aMethod}, "Stop", 
-                            React.createElement("i", {className: "fa fa-stop fa-fw"})
-                        )
+                        React.createElement("div", {className: "col-xs-5 col-xs-offset-2"}, 
 
-                    ), 
+                            React.createElement("button", {type: "button", 
+                                className: "btn btn-block btn-success", 
+                                onClick: this.aMethod}, "Run", 
+                                React.createElement("i", {className: "fa fa-play-circle fa-fw"})
+                            )
 
-                    React.createElement("div", {className: "col-xs-12"}, 
+                        ), 
 
-                        React.createElement("b", null, "Sample_42"), 
+                        React.createElement("div", {className: "col-xs-5"}, 
 
-                        React.createElement("ul", {className: "lead list"}, 
-                            React.createElement("ol", {className: "text-left"}, 
+                            React.createElement("button", {type: "button", 
+                                className: "btn btn-block btn-danger", 
+                                onClick: this.aMethod}, "Stop", 
+                                React.createElement("i", {className: "fa fa-stop fa-fw"})
+                            )
 
-                                arr.map(function(listValue) {
+                        ), 
 
-                                    return React.createElement("li", {style: listStyle}, 
+                        React.createElement("div", {className: "col-xs-12 text-center"}, 
+                            React.createElement("b", null, "Sample ", SAMPLETREE.queueInfo.sampleID)
+                        ), 
+
+                        arr.map(function(listValue) {
+
+                            return (
+                                React.createElement("div", {className: "text-left col-xs-12 queue-list"}, 
+
+                                    React.createElement("div", {className: "col-xs-5 queue-list"}, 
+                                        React.createElement("b", null, listValue.queueID, ". "), 
+
                                         React.createElement("a", {"data-toggle": "collapse", 
+                                            className: "queue-list", 
                                             href: '#collapse' +
-                                                listValue['name']}, 
-                                                listValue['name']
+                                                listValue.name}, 
+                                                listValue.name
                                         ), 
 
+                                        React.createElement("div", {className: "collapse", 
+                                            id: 'collapse' + listValue.name}, 
+                                            React.createElement("div", {className: "well"}, 
+                                                that.formatParameters(
+                                                    listValue.name)
+                                            )
+                                        )
+                                    ), 
+
+                                    React.createElement("div", {className: "text-right col-xs-7"}, 
+
                                         React.createElement("button", {type: "button", 
-                                                className: "btn btn-link  pull-right", 
-                                                onClick: that.aMethod}, 
-                                            React.createElement("i", {className: that.formatStatus(listValue['status'])}
+                                                className: "btn btn-link" + ' ' +
+                                                "queue-list", 
+                                                onClick: 
+                                                    that.removeQueueItem.bind(
+                                                        that,
+                                                        listValue.queueID
+                                                    )
+                                                }, 
+                                            React.createElement("i", {className: "fa fa-fw fa-eraser"}
                                             )
                                         ), 
 
                                         React.createElement("button", {type: "button", 
-                                                className: "btn btn-link  pull-right", 
-                                                onClick: that.runThisItem.bind(that,listValue['name'])}, 
-                                            React.createElement("i", {className: "fa fa-fw fa-play-circle"})
+                                                className: "btn btn-link", 
+                                                onClick: that.runThisItem.bind(
+                                                    that,listValue.name)}, 
+                                            React.createElement("i", {className: "fa fa-fw fa-play-circle"}
+                                            )
                                         ), 
 
                                         React.createElement("button", {type: "button", 
-                                                className: "btn btn-link  pull-right", 
-                                                onClick: that.removeQueueItem.bind(that,listValue['name'])}, 
-                                            React.createElement("i", {className: "fa fa-fw fa-eraser"})), 
-
-                                    React.createElement("div", {className: "collapse", 
-                                            id: 'collapse' + listValue['name']}, 
-                                        React.createElement("div", {className: "well"}, 
-                                            that.formatParameters(listValue['name'])
+                                                className: "btn btn-link", 
+                                                onClick: that.aMethod}, 
+                                            React.createElement("i", {className: that.formatStatus(
+                                                listValue.status)})
                                         )
                                     )
-
-                                    );
-                                })
-
-                            )
-                        )
+                                )
+                            );
+                        })
 
                     )
-
                 )
             )
         );
@@ -254,14 +308,19 @@ SAMPLETREE.SingleSampleTree = React.createClass({displayName: "SingleSampleTree"
 
 SAMPLETREE.EditableField = React.createClass({displayName: "EditableField",
 
+
     componentDidMount: function() {
         $(this.refs.editable.getDOMNode()).editable();
     },
 
+
     render: function() {
-        return React.createElement("p", null, this.props.name, ": ", React.createElement("a", {href: "#", ref: "editable", 
-            "data-name": this.props.name, "data-pk": this.props.id, 
-            "data-url": "/beam_line_update", "data-type": "text", 
-            "data-title": "Edit value"}, this.props.value));
+        return React.createElement("p", null, this.props.name, ":", 
+                React.createElement("a", {href: "#", ref: "editable", "data-name": this.props.name, 
+                    "data-pk": this.props.id, "data-url": "/beam_line_update", 
+                    "data-type": "text", "data-title": "Edit value"}, 
+                    this.props.value
+                )
+            );
     }
 });
